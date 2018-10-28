@@ -1,8 +1,25 @@
-console.log("starting");
+console.log('Starting app.js');
 
 const fs = require('fs');
-const os = require('os');
+const _ = require('lodash');
+const yargs = require('yargs');
 
-let user = os.userInfo();
+const notes = require('./notes.js');
 
-fs.appendFileSync('greetings.txt', `Hello ${user.username}!\n`);
+const argv = yargs.argv;
+var command = argv._[0];
+console.log('Command: ', command);
+console.log('Yargs', argv);
+
+if (command === 'add') {
+  notes.addNote(argv.title, argv.body);
+} else if (command === 'list') {
+  notes.getAll();
+} else if (command === 'read') {
+  notes.getNote(argv.title);
+} else if (command === 'remove') {
+  var noteRemoved = notes.removeNote(argv.title);
+  var message = noteRemoved ? 'Note was removed' : 'Note not found';
+} else {
+  console.log('Command not recognized');
+}
